@@ -27,3 +27,13 @@ API endpoints:
 
 Weather requests require internet access. SQLite is included with Python;
 no separate database installation is needed. Search results are saved in weather.db.
+
+WEEK 3 - SOURCE CODE MANAGEMENT
+
+Project: Weather Forecasting Application
+Backend: Python Flask
+Frontend: HTML and CSS
+Database: SQLite
+Weather API: Open-Meteo
+
+Week 3 task: Practiced feature branches and GitHub source code management.
