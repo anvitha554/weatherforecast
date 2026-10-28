@@ -37,3 +37,4 @@ Database: SQLite
 Weather API: Open-Meteo
 
 Week 3 task: Practiced feature branches and GitHub source code management.
+Week 5: Jenkins CI/CD pipeline configured with GitHub polling.
