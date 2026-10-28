@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyCast — Weather Forecast</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div class="brand"><span class="brand-icon">☁</span><span>SkyCast</span></div>
+    <span class="live-pill"><i></i> LIVE WEATHER</span>
+  </header>
+
+  <section class="intro">
+    <p class="eyebrow">WEATHER AT A GLANCE</p>
+    <h1>Find your <span>weather.</span></h1>
+    <p class="subtitle">Live conditions and a 7-day forecast for any city.</p>
+    <form id="search-form" class="search-form">
+      <span class="search-symbol">⌕</span>
+      <input id="city-input" type="text" value="{{ default_city }}" placeholder="Enter a city..." aria-label="City name" required>
+      <button id="search-button" type="submit">Search <b>→</b></button>
+    </form>
+    <p class="hint">Try Hyderabad, Mumbai, Delhi or London</p>
+  </section>
+
+  <div id="message" class="message" role="status">Loading live weather…</div>
+
+  <section id="weather-content" hidden>
+    <div class="section-heading">
+      <div><p class="eyebrow">CURRENT CONDITIONS</p><h2 id="city-name">Hyderabad</h2><p id="local-time" class="muted"></p></div>
+      <span class="today-tag">Today</span>
+    </div>
+
+    <section class="current-card">
+      <div class="current-main">
+        <div><p class="muted">Current temperature</p><div class="temperature"><span id="temperature">--</span><sup>°C</sup></div><h3 id="description">Loading…</h3><p class="feels">Feels like <strong id="feels-like">--°C</strong></p></div>
+        <div id="current-icon" class="hero-icon">🌤️</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="stat-icon">💧</span><div><p>Humidity</p><strong id="humidity">--%</strong></div></div>
+        <div class="stat"><span class="stat-icon">💨</span><div><p>Wind speed</p><strong id="wind">-- km/h</strong></div></div>
+        <div class="stat"><span class="stat-icon">🌡️</span><div><p>Feels like</p><strong id="feels-stat">--°C</strong></div></div>
+      </div>
+    </section>
+
+    <section class="forecast-section">
+      <div class="forecast-title"><div><p class="eyebrow">PLAN AHEAD</p><h2>7-day forecast</h2></div><span class="muted">Next 7 days</span></div>
+      <div id="forecast-grid" class="forecast-grid"></div>
+    </section>
+
+    <section class="history-section">
+      <div class="forecast-title"><div><p class="eyebrow">SAVED IN SQLITE</p><h2>Recent searches</h2></div><button id="refresh-history" class="small-button" type="button">Refresh history</button></div>
+      <div class="history-wrap"><table><thead><tr><th>City</th><th>Temperature</th><th>Conditions</th><th>Saved at (UTC)</th></tr></thead><tbody id="history-body"><tr><td colspan="4">Loading history…</td></tr></tbody></table></div>
+    </section>
+  </section>
+  <footer>Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a> · Search history stored locally in SQLite</footer>
+</main>
+<script>
+const form = document.getElementById('search-form');
+const input = document.getElementById('city-input');
+const button = document.getElementById('search-button');
+const message = document.getElementById('message');
+const content = document.getElementById('weather-content');
+
+function dayName(date, index) {
+  if (index === 0) return 'Today';
+  if (index === 1) return 'Tomorrow';
+  return new Date(date + 'T12:00:00').toLocaleDateString(undefined, {weekday:'short'});
+}
+
+async function loadHistory() {
+  const body = document.getElementById('history-body');
+  try {
+    const response = await fetch('/api/history');
+    const rows = await response.json();
+    body.replaceChildren();
+    if (!rows.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td'); td.colSpan = 4; td.textContent = 'No searches saved yet. Search for a city to start your history.';
+      tr.append(td); body.append(tr); return;
+    }
+    rows.forEach(row => {
+      const tr = document.createElement('tr');
+      [row.city, row.temperature + '°C', row.description, row.searched_at.replace('T',' ').replace('+00:00','')].forEach(value => {
+        const td = document.createElement('td'); td.textContent = value; tr.append(td);
+      });
+      body.append(tr);
+    });
+  } catch (_) {
+    body.textContent = 'Could not load saved history.';
+  }
+}
+
+async function loadWeather(city) {
+  message.hidden = false; message.className = 'message';
+  message.textContent = 'Fetching live weather for ' + city + '…';
+  content.hidden = true; button.disabled = true;
+  try {
+    const response = await fetch('/api/weather?city=' + encodeURIComponent(city));
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Could not load weather.');
+    document.getElementById('city-name').textContent = data.city;
+    document.getElementById('local-time').textContent = 'Local time · ' + data.weather.time;
+    document.getElementById('temperature').textContent = data.weather.temperature;
+    document.getElementById('description').textContent = data.weather.description;
+    document.getElementById('current-icon').textContent = data.weather.icon;
+    document.getElementById('feels-like').textContent = data.weather.feels_like + '°C';
+    document.getElementById('feels-stat').textContent = data.weather.feels_like + '°C';
+    document.getElementById('humidity').textContent = data.weather.humidity + '%';
+    document.getElementById('wind').textContent = data.weather.wind + ' km/h';
+
+    const grid = document.getElementById('forecast-grid');
+    grid.replaceChildren();
+    data.forecast.forEach((day, index) => {
+      const card = document.createElement('article'); card.className = 'forecast-card';
+      const dayEl = document.createElement('p'); dayEl.className = 'forecast-day'; dayEl.textContent = dayName(day.date,index);
+      const icon = document.createElement('div'); icon.className = 'forecast-icon'; icon.textContent = day.icon;
+      const desc = document.createElement('p'); desc.className = 'forecast-desc'; desc.textContent = day.description;
+      const temps = document.createElement('p'); temps.className = 'forecast-temps';
+      const high = document.createElement('strong'); high.textContent = day.max_temp + '°';
+      const low = document.createElement('span'); low.textContent = day.min_temp + '°';
+      temps.append(high,low);
+      const rain = document.createElement('p'); rain.className = 'rain-chance'; rain.textContent = '☂ ' + day.rain + '% rain';
+      card.append(dayEl,icon,desc,temps,rain); grid.append(card);
+    });
+    message.hidden = true; content.hidden = false;
+    await loadHistory();
+  } catch (error) {
+    message.className = 'message error';
+    message.textContent = error.message + ' Check your internet connection and try again.';
+  } finally { button.disabled = false; }
+}
+
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  const city = input.value.trim();
+  if (city) loadWeather(city);
+});
+document.getElementById('refresh-history').addEventListener('click', loadHistory);
+loadWeather(input.value);
+</script>
+</body>
+</html>

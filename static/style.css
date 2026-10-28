@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{--ink:#142b4a;--muted:#75849b;--blue:#3578f6;--line:#e7edf6}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 12% 5%,#e7f2ff 0,transparent 32%),linear-gradient(145deg,#f7faff,#eef4ff);color:var(--ink);font-family:'DM Sans',sans-serif}
+.shell{max-width:1120px;margin:auto;padding:28px 34px 24px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:5px 0 35px}
+.brand{display:flex;align-items:center;gap:10px;font:800 23px Manrope,sans-serif;letter-spacing:-.8px}
+.brand-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:13px;background:#dceaff;color:var(--blue);font-size:27px}
+.live-pill{display:flex;align-items:center;gap:8px;border:1px solid #dbe7f6;border-radius:30px;padding:9px 13px;font-size:10px;letter-spacing:1.2px;font-weight:700;color:#58708f;background:#ffffffa8}
+.live-pill i{width:7px;height:7px;border-radius:50%;background:#30c48d;box-shadow:0 0 0 4px #30c48d20}
+.intro{text-align:center;padding:14px 0 28px}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blue);margin:0 0 10px}
+h1,h2,h3,p{margin-top:0}
+h1{font:800 clamp(36px,5vw,56px)/1.1 Manrope,sans-serif;letter-spacing:-2.3px;margin-bottom:12px}
+h1 span{color:var(--blue)}
+.subtitle{color:var(--muted);font-size:15px;margin-bottom:24px}
+.search-form{display:flex;align-items:center;gap:10px;max-width:520px;margin:0 auto;background:white;border:1px solid #e2eaf6;box-shadow:0 12px 35px #2e5c9710;border-radius:15px;padding:7px 8px 7px 17px}
+.search-symbol{font-size:25px;color:#8294ad}
+.search-form input{flex:1;min-width:0;border:0;outline:0;font:500 14px 'DM Sans';color:var(--ink);background:transparent}
+.search-form button,.small-button{border:0;border-radius:10px;background:var(--blue);color:white;padding:13px 19px;font-weight:700;cursor:pointer}
+.search-form button:disabled{opacity:.6;cursor:wait}
+.search-form button b{font-size:17px;margin-left:7px}
+.hint{font-size:11px;color:#9aa8bb;margin-top:12px}
+.message{max-width:780px;margin:14px auto 22px;padding:14px 17px;border-radius:12px;background:#e8f1ff;color:#315d9b;font-size:13px;text-align:center}
+.message[hidden],section[hidden]{display:none}
+.message.error{background:#fff0ef;color:#a53a36}
+.section-heading,.forecast-title{display:flex;align-items:center;justify-content:space-between}
+.section-heading{margin:22px 0 14px}
+.section-heading h2,.forecast-title h2{font:700 24px Manrope,sans-serif;letter-spacing:-.8px;margin:0 0 5px}
+.muted{color:var(--muted);font-size:12px;margin-bottom:0}
+.today-tag{background:#e4edff;color:#2866d6;font-size:12px;font-weight:700;padding:8px 14px;border-radius:20px}
+.current-card{background:linear-gradient(115deg,#fff 15%,#f0f6ff);border:1px solid #e4ecf8;border-radius:23px;padding:27px 30px;box-shadow:0 14px 35px #2a52800b}
+.current-main{display:flex;align-items:center;justify-content:space-between;padding-bottom:25px}
+.temperature{font:800 70px/.98 Manrope,sans-serif;letter-spacing:-4px;margin:10px 0}
+.temperature sup{font-size:30px;vertical-align:top;letter-spacing:-1px;margin-left:4px}
+.current-main h3{font-size:17px;margin:0 0 8px}
+.feels{font-size:12px;color:var(--muted);margin:0}
+.hero-icon{font-size:100px;filter:drop-shadow(0 12px 15px #6b93cc22);padding:0 30px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);padding-top:20px;gap:12px}
+.stat{display:flex;align-items:center;gap:12px;padding:5px 12px}
+.stat+.stat{border-left:1px solid var(--line)}
+.stat-icon{display:grid;place-items:center;background:#edf4ff;width:40px;height:40px;border-radius:13px;font-size:19px}
+.stat p{font-size:11px;color:var(--muted);margin:0 0 4px}
+.stat strong{font-size:16px}
+.forecast-section,.history-section{margin-top:32px}
+.forecast-title{margin-bottom:17px}
+.forecast-title .muted{font-size:12px}
+.forecast-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.forecast-card{text-align:center;min-width:0;padding:17px 8px 14px;background:#ffffffd9;border:1px solid #e5ecf6;border-radius:17px;box-shadow:0 8px 22px #2a528006}
+.forecast-day{font-size:11px;font-weight:700;margin-bottom:13px}
+.forecast-icon{font-size:29px;margin-bottom:12px}
+.forecast-desc{font-size:10px;line-height:1.4;min-height:28px;color:var(--muted);margin-bottom:12px}
+.forecast-temps{display:flex;justify-content:center;gap:8px;font-size:12px;margin-bottom:12px}
+.forecast-temps span{color:#93a0b2}
+.rain-chance{font-size:10px;color:#4784e9;margin:0;white-space:nowrap}
+.small-button{font-size:11px;padding:9px 12px}
+.history-wrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:15px}
+table{width:100%;border-collapse:collapse;text-align:left;font-size:12px}
+th,td{padding:13px 15px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:#f5f8fe;color:#687b96;font-size:10px;letter-spacing:.5px}
+tbody tr:last-child td{border-bottom:0}
+footer{text-align:center;color:#98a6b8;font-size:11px;padding:34px 0 8px}
+footer a{color:#4e7ed0;text-decoration:none}
+@media(max-width:850px){.forecast-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:560px){.shell{padding:18px 15px}.topbar{padding-bottom:22px}.brand{font-size:20px}.intro{padding-top:8px}.subtitle{font-size:13px}.current-card{padding:22px 17px}.temperature{font-size:59px}.hero-icon{font-size:73px;padding:0}.stats{gap:3px}.stat{padding:5px 2px;gap:6px;flex-direction:column;align-items:flex-start}.stat-icon{width:34px;height:34px}.stat strong{font-size:13px}.forecast-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.forecast-card:last-child{grid-column:span 2}.section-heading h2,.forecast-title h2{font-size:21px}}
