@@ -249,6 +249,6 @@ def clear_history():
 
 init_db()
 
+
 if __name__ == "__main__":
-    # Development server; use a production WSGI server for deployment.
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)
